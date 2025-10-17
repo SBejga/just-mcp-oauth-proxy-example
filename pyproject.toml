@@ -1,0 +1,96 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "just-mcp-oauth-proxy-example"
+version = "0.1.0"
+description = "FastMCP project with OAuth proxy to Entra ID as an example"
+authors = [{name = "Example Author", email = "author@example.com"}]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "fastmcp>=2.0.0",
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
+    "httpx>=0.25.0",
+    "python-multipart>=0.0.6",
+    "python-jose[cryptography]>=3.3.0",
+    "python-dotenv>=1.0.0",
+    "cryptography>=41.0.0",
+    "pydantic>=2.4.0",
+    "msal>=1.24.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.9.0",
+    "ruff>=0.0.292",
+    "mypy>=1.5.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/SBejga/just-mcp-oauth-proxy-example"
+Repository = "https://github.com/SBejga/just-mcp-oauth-proxy-example"
+Issues = "https://github.com/SBejga/just-mcp-oauth-proxy-example/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.black]
+line-length = 88
+target-version = ["py38"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py38"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "S", "B", "A", "C4", "ICN", "PIE", "T20", "RET", "SIM", "ARG", "ERA", "PL", "RUF"]
+ignore = [
+    "S101",    # assert statements in tests
+    "S104",    # hardcoded bind all interfaces
+    "S105",    # hardcoded passwords in tests
+    "S106",    # hardcoded passwords in tests  
+    "T201",    # print statements (acceptable in CLI tools)
+    "PLR0913", # too many arguments
+    "PLR2004", # magic numbers
+    "RET504",  # unnecessary variable assignment
+]
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
