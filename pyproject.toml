@@ -59,8 +59,19 @@ target-version = ["py38"]
 [tool.ruff]
 line-length = 88
 target-version = "py38"
+
+[tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP", "S", "B", "A", "C4", "ICN", "PIE", "T20", "RET", "SIM", "ARG", "ERA", "PL", "RUF"]
-ignore = ["S101", "S104", "PLR0913", "PLR2004", "RET504"]
+ignore = [
+    "S101",    # assert statements in tests
+    "S104",    # hardcoded bind all interfaces
+    "S105",    # hardcoded passwords in tests
+    "S106",    # hardcoded passwords in tests  
+    "T201",    # print statements (acceptable in CLI tools)
+    "PLR0913", # too many arguments
+    "PLR2004", # magic numbers
+    "RET504",  # unnecessary variable assignment
+]
 
 [tool.mypy]
 python_version = "3.8"

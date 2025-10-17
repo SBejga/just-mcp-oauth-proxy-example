@@ -3,22 +3,21 @@
 import secrets
 import webbrowser
 from typing import Dict, Optional
-from urllib.parse import urlencode, parse_qs
 
-from fastapi import FastAPI, HTTPException, Query, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
 import uvicorn
+from fastapi import FastAPI, HTTPException, Query
+from fastapi.responses import HTMLResponse, RedirectResponse
 
-from .auth import EntraIDAuth, AuthenticationError
+from .auth import AuthenticationError, EntraIDAuth
 from .config import Config
 
 
 class AuthServer:
     """OAuth2 authentication server."""
-    
+
     def __init__(self, config: Config) -> None:
         """Initialize the authentication server.
-        
+
         Args:
             config: Configuration object
         """
@@ -26,16 +25,17 @@ class AuthServer:
         self.auth = EntraIDAuth(config)
         self.app = FastAPI(title="MCP OAuth Authentication Server")
         self.sessions: Dict[str, Dict] = {}
-        
+
         self._setup_routes()
-    
+
     def _setup_routes(self) -> None:
         """Setup FastAPI routes."""
-        
+
         @self.app.get("/")
         async def root():
             """Root endpoint with authentication link."""
-            return HTMLResponse("""
+            return HTMLResponse(
+                """
             <html>
                 <head>
                     <title>MCP OAuth Authentication</title>
@@ -80,26 +80,27 @@ class AuthServer:
                     </div>
                 </body>
             </html>
-            """)
-        
+            """
+            )
+
         @self.app.get("/auth/login")
         async def login():
             """Initiate OAuth2 login flow."""
             # Generate PKCE parameters
             code_verifier, code_challenge = self.auth.generate_pkce_pair()
             state = secrets.token_urlsafe(32)
-            
+
             # Store session data
             self.sessions[state] = {
                 "code_verifier": code_verifier,
                 "code_challenge": code_challenge,
             }
-            
+
             # Get authorization URL
             auth_url = self.auth.get_authorization_url(state, code_challenge)
-            
+
             return RedirectResponse(url=auth_url)
-        
+
         @self.app.get("/auth/callback")
         async def callback(
             code: Optional[str] = Query(None),
@@ -111,38 +112,37 @@ class AuthServer:
             if error:
                 error_msg = error_description or error
                 raise HTTPException(
-                    status_code=400, 
-                    detail=f"Authentication failed: {error_msg}"
+                    status_code=400, detail=f"Authentication failed: {error_msg}"
                 )
-            
+
             if not code or not state:
                 raise HTTPException(
-                    status_code=400, 
-                    detail="Missing authorization code or state parameter"
+                    status_code=400,
+                    detail="Missing authorization code or state parameter",
                 )
-            
+
             # Verify state and get session
             session = self.sessions.get(state)
             if not session:
                 raise HTTPException(
-                    status_code=400, 
-                    detail="Invalid or expired state parameter"
+                    status_code=400, detail="Invalid or expired state parameter"
                 )
-            
+
             try:
                 # Exchange code for tokens
                 token_info = await self.auth.exchange_code_for_tokens(
                     code, session["code_verifier"]
                 )
-                
+
                 # Create JWT token for our application
                 jwt_token = self.auth.create_jwt_token(token_info.user_info)
-                
+
                 # Clean up session
                 del self.sessions[state]
-                
+
                 # Return success page with token
-                return HTMLResponse(f"""
+                return HTMLResponse(
+                    f"""
                 <html>
                     <head>
                         <title>Authentication Successful</title>
@@ -201,28 +201,31 @@ class AuthServer:
                         </script>
                     </body>
                 </html>
-                """)
-                
+                """
+                )
+
             except AuthenticationError as e:
                 # Clean up session
                 if state in self.sessions:
                     del self.sessions[state]
                 raise HTTPException(status_code=400, detail=str(e))
-        
+
         @self.app.get("/health")
         async def health():
             """Health check endpoint."""
             return {"status": "healthy", "service": "mcp-oauth-auth-server"}
-    
+
     def run(self, open_browser: bool = True) -> None:
         """Run the authentication server.
-        
+
         Args:
             open_browser: Whether to open browser automatically
         """
         if open_browser:
-            webbrowser.open(f"http://{self.config.server_host}:{self.config.auth_server_port}")
-        
+            webbrowser.open(
+                f"http://{self.config.server_host}:{self.config.auth_server_port}"
+            )
+
         uvicorn.run(
             self.app,
             host=self.config.server_host,
@@ -236,12 +239,12 @@ def main() -> None:
     try:
         config = Config.from_env()
         server = AuthServer(config)
-        
-        print(f"Starting OAuth Authentication Server...")
+
+        print("Starting OAuth Authentication Server...")
         print(f"Server URL: {config.auth_server_url}")
         print(f"Redirect URI: {config.redirect_uri}")
         print("Press Ctrl+C to stop")
-        
+
         server.run()
     except ValueError as e:
         print(f"Configuration error: {e}")
