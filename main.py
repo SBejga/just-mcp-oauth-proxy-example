@@ -6,34 +6,34 @@ mcp = FastMCP(name="Jameson")
 
 @mcp.tool
 def relativator(size: float, typ: str) -> str:
-    """Gibt eine witzige Vergleichsbeschreibung für eine Größe zurück. Unterstützte Typen: m2 (m² / Quadratmeter), m (Meter), kg (Kilogramm), GB (Gigabyte), m3 (m³ / Kubikmeter)."""
+    """Returns a funny comparative description for a size. Supported types: m2 (m² / square meters), m (meters), kg (kilograms), GB (gigabytes), m3 (m³ / cubic meters). Default language is German, but accepts English inputs as well."""
     typ = typ.lower()
 
-    if typ in ["m2", "m²", "meter²", "quadratmeter", "fläche", "flaeche"]:
-        vergleich = size / 7140  # ca. Fläche eines Fußballfelds in m²
-        return f"≈ {vergleich:.2f} Fußballfelder groß ⚽"
+    if typ in ["m2", "m²", "meter²", "quadratmeter", "fläche", "flaeche", "square meters", "area"]:
+        comparison = size / 7140  # approx. area of a soccer field in m²
+        return f"≈ {comparison:.2f} soccer fields large ⚽"
     
-    elif typ in ["m", "meter", "länge", "laenge"]:
-        vergleich = size / 1.8  # durchschnittliche Körpergröße
-        objekte = ["Menschen", "Kühlschränke", "Hunde übereinander"]
-        return f"≈ {vergleich:.1f} {random.choice(objekte)} übereinander 🧍"
+    elif typ in ["m", "meter", "länge", "laenge", "length"]:
+        comparison = size / 1.8  # average human height
+        objects = ["people", "refrigerators", "dogs stacked on top of each other"]
+        return f"≈ {comparison:.1f} {random.choice(objects)} stacked on top of each other 🧍"
     
-    elif typ in ["kg", "kilogramm", "gewicht"]:
-        vergleich = size / 5  # durchschnittliche Hauskatze ~5 kg
-        objekte = ["Hauskatzen", "Waschbären", "Hühner"]
-        return f"≈ {vergleich:.1f} {random.choice(objekte)} schwer 🐈"
+    elif typ in ["kg", "kilogramm", "gewicht", "weight"]:
+        comparison = size / 5  # average house cat ~5 kg
+        objects = ["house cats", "raccoons", "chickens"]
+        return f"≈ {comparison:.1f} {random.choice(objects)} heavy 🐈"
     
-    elif typ in ["daten", "datenmenge"]:
-        vergleich = size * 220  # 1 GB ≈ 220 MP3-Dateien
-        objekte = ["MP3-Dateien", "Urlaubsfotos", "PowerPoint-Präsentationen"]
-        return f"≈ {vergleich:.0f} {random.choice(objekte)} 💾"
+    elif typ in ["gb", "gigabyte", "daten", "datenmenge", "data"]:
+        comparison = size * 220  # 1 GB ≈ 220 MP3 files
+        objects = ["MP3 files"]
+        return f"≈ {comparison:.0f} {random.choice(objects)} 💾"
     
-    elif typ in ["m3", "m³", "kubikmeter", "volumen"]:
-        vergleich = size / 0.065  # 1 Waschmaschine ≈ 65 l = 0.065 m³
-        return f"≈ {vergleich:.1f} Waschmaschinen voll 🧺"
+    elif typ in ["m3", "m³", "kubikmeter", "volumen", "cubic meters", "volume"]:
+        comparison = size / 0.065  # 1 washing machine ≈ 65 l = 0.065 m³
+        return f"≈ {comparison:.1f} washing machines full 🧺"
     
     else:
-        return f"🤷 Typ '{typ}' wird noch nicht unterstützt – vielleicht bald!"
+        return f"🤷 Type '{typ}' is not yet supported – maybe soon!"
 
 if __name__ == "__main__":
     mcp.run(transport="http", port=4242)
