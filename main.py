@@ -1,8 +1,14 @@
-from fastmcp import FastMCP
 import random
+import os
+from fastmcp import FastMCP
+from fastmcp.server.auth.providers.azure import AzureProvider
+from fastmcp.server.dependencies import get_access_token
+from fastmcp.utilities.logging import get_logger
 
-# "Just a mcp example server with oauth"
-mcp = FastMCP(name="Jameson")
+logger = get_logger(__name__)
+
+auth_provider = AzureProvider()
+mcp = FastMCP(name="Jameson", auth=auth_provider)
 
 @mcp.tool
 def relativator(size: float, typ: str) -> str:
@@ -35,5 +41,21 @@ def relativator(size: float, typ: str) -> str:
     else:
         return f"🤷 Type '{typ}' is not yet supported – maybe soon!"
 
+# test tool by inspecting access_token of authentication
+@mcp.tool
+async def get_user_info() -> dict:
+    """Returns information about the authenticated Azure user."""
+       
+    token = get_access_token()
+    # The AzureProvider stores user data in token claims
+    return {
+        "azure_id": token.claims.get("sub"), # type: ignore
+        "email": token.claims.get("email"), # type: ignore
+        "name": token.claims.get("name"), # type: ignore
+        "job_title": token.claims.get("job_title"), # type: ignore
+        "office_location": token.claims.get("office_location") # type: ignore
+    }
+
 if __name__ == "__main__":
+    logger.info("FASTMCP_SERVER_AUTH: %s", os.environ.get("FASTMCP_SERVER_AUTH"))
     mcp.run(transport="http", port=4242)

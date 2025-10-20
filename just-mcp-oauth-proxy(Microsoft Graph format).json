@@ -1,0 +1,118 @@
+{
+	"id": "{{ID}}",
+	"deletedDateTime": null,
+	"appId": "{{APP_ID}}",
+	"applicationTemplateId": null,
+	"disabledByMicrosoftStatus": null,
+	"createdDateTime": "2025-10-20T10:26:41Z",
+	"displayName": "just-mcp-oauth-proxy",
+	"description": null,
+	"groupMembershipClaims": null,
+	"identifierUris": [
+		"api://{{APP_ID}}"
+	],
+	"isDeviceOnlyAuthSupported": null,
+	"isFallbackPublicClient": null,
+	"nativeAuthenticationApisEnabled": null,
+	"notes": null,
+	"publisherDomain": "{{ENTRA_TENANT_NAME}}.onmicrosoft.com",
+	"serviceManagementReference": null,
+	"signInAudience": "AzureADMultipleOrgs",
+	"tags": [],
+	"tokenEncryptionKeyId": null,
+	"samlMetadataUrl": null,
+	"defaultRedirectUri": null,
+	"certification": null,
+	"optionalClaims": null,
+	"requestSignatureVerification": null,
+	"addIns": [],
+	"api": {
+		"acceptMappedClaims": null,
+		"knownClientApplications": [],
+		"requestedAccessTokenVersion": 2,
+		"oauth2PermissionScopes": [
+			{
+				"adminConsentDescription": "Allows read access to just-mcp-oauth-proxy-example",
+				"adminConsentDisplayName": "Read access to just-mcp-oauth-proxy-example",
+				"id": "66b736a7-b923-4df3-8a15-b1e5603faced",
+				"isEnabled": true,
+				"type": "User",
+				"userConsentDescription": "Allows read access to just-mcp-oauth-proxy-example",
+				"userConsentDisplayName": "Read access to just-mcp-oauth-proxy-example",
+				"value": "read"
+			}
+		],
+		"preAuthorizedApplications": []
+	},
+	"appRoles": [],
+	"info": {
+		"logoUrl": null,
+		"marketingUrl": null,
+		"privacyStatementUrl": null,
+		"supportUrl": null,
+		"termsOfServiceUrl": null
+	},
+	"keyCredentials": [],
+	"parentalControlSettings": {
+		"countriesBlockedForMinors": [],
+		"legalAgeGroupRule": "Allow"
+	},
+	"passwordCredentials": [
+		{
+			"customKeyIdentifier": null,
+			"displayName": "just-mcp-oauth-proxy-example-secret",
+			"endDateTime": "2026-04-18T10:27:36.844Z",
+			"hint": "psR",
+			"keyId": "{{REDACTED}}",
+			"secretText": null,
+			"startDateTime": "2025-10-20T10:27:36.844Z"
+		}
+	],
+	"publicClient": {
+		"redirectUris": []
+	},
+	"requiredResourceAccess": [
+		{
+			"resourceAppId": "00000003-0000-0000-c000-000000000000",
+			"resourceAccess": [
+				{
+					"id": "e1fe6dd8-ba31-4d61-89e7-88639da4683d",
+					"type": "Scope"
+				}
+			]
+		}
+	],
+	"verifiedPublisher": {
+		"displayName": null,
+		"verifiedPublisherId": null,
+		"addedDateTime": null
+	},
+	"web": {
+		"homePageUrl": null,
+		"logoutUrl": null,
+		"redirectUris": [
+			"http://localhost:4242/auth/callback"
+		],
+		"implicitGrantSettings": {
+			"enableAccessTokenIssuance": false,
+			"enableIdTokenIssuance": false
+		},
+		"redirectUriSettings": [
+			{
+				"uri": "http://localhost:4242/auth/callback",
+				"index": null
+			}
+		]
+	},
+	"servicePrincipalLockConfiguration": {
+		"isEnabled": true,
+		"allProperties": true,
+		"credentialsWithUsageVerify": true,
+		"credentialsWithUsageSign": true,
+		"identifierUris": false,
+		"tokenEncryptionKeyId": true
+	},
+	"spa": {
+		"redirectUris": []
+	}
+}
