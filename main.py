@@ -6,19 +6,19 @@ mcp = FastMCP(name="Jameson")
 
 @mcp.tool
 def relativator(size: float, typ: str) -> str:
-    """Gibt eine witzige Vergleichsbeschreibung für eine Größe zurück."""
+    """Gibt eine witzige Vergleichsbeschreibung für eine Größe zurück. Unterstützte Typen: m2 (m² / Quadratmeter), m (Meter), kg (Kilogramm), GB (Gigabyte), m3 (m³ / Kubikmeter)."""
     typ = typ.lower()
-    
-    if typ in ["fläche", "flaeche"]:
+
+    if typ in ["m2", "m²", "meter²", "quadratmeter", "fläche", "flaeche"]:
         vergleich = size / 7140  # ca. Fläche eines Fußballfelds in m²
         return f"≈ {vergleich:.2f} Fußballfelder groß ⚽"
     
-    elif typ in ["länge", "laenge"]:
+    elif typ in ["m", "meter", "länge", "laenge"]:
         vergleich = size / 1.8  # durchschnittliche Körpergröße
         objekte = ["Menschen", "Kühlschränke", "Hunde übereinander"]
         return f"≈ {vergleich:.1f} {random.choice(objekte)} übereinander 🧍"
     
-    elif typ == "gewicht":
+    elif typ in ["kg", "kilogramm", "gewicht"]:
         vergleich = size / 5  # durchschnittliche Hauskatze ~5 kg
         objekte = ["Hauskatzen", "Waschbären", "Hühner"]
         return f"≈ {vergleich:.1f} {random.choice(objekte)} schwer 🐈"
@@ -28,7 +28,7 @@ def relativator(size: float, typ: str) -> str:
         objekte = ["MP3-Dateien", "Urlaubsfotos", "PowerPoint-Präsentationen"]
         return f"≈ {vergleich:.0f} {random.choice(objekte)} 💾"
     
-    elif typ == "volumen":
+    elif typ in ["m3", "m³", "kubikmeter", "volumen"]:
         vergleich = size / 0.065  # 1 Waschmaschine ≈ 65 l = 0.065 m³
         return f"≈ {vergleich:.1f} Waschmaschinen voll 🧺"
     
