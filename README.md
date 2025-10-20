@@ -69,8 +69,15 @@ But this does not work with other clients.
 
 ## Patched
 
+providing a workaround with PatchedAzureProvider
 according to https://github.com/jlowin/fastmcp/issues/1846
 
-`run.sh main-patched.py`
+it works now with MCP Inspector with `via proxy` connection type.
 
-works :-)
+## Tested MCP Clients:
+
+- [X] MCP Inspector `via proxy` (with PatchedAzureProvider)
+- [ ] MCP Inspector `direct` (CORS issue TODO, see also https://github.com/jlowin/fastmcp/pull/2150)
+- [ ] Claude Desktop
+- [ ] Claude Web
+- [ ] ChatGPT Web
