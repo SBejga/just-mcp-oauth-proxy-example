@@ -1,5 +1,4 @@
 import random
-import os
 from fastmcp import FastMCP
 from fastmcp.server.auth.providers.azure import AzureProvider
 from fastmcp.server.dependencies import get_access_token
@@ -7,7 +6,22 @@ from fastmcp.utilities.logging import get_logger
 
 logger = get_logger(__name__)
 
-auth_provider = AzureProvider()
+# according to https://github.com/jlowin/fastmcp/issues/1846
+class PatchedAzureProvider(AzureProvider):
+    def authorize(self, *args, **kwargs):
+        # Remove resource from auth_params if present
+        if len(args) >= 2 and hasattr(args[1], 'resource'):
+            # Create a copy of auth_params without the resource attribute
+            auth_params = args[1]
+            if hasattr(auth_params, '__dict__'):
+                # Create new auth_params without resource
+                new_auth_params = type(auth_params)(**{k: v for k, v in auth_params.__dict__.items() if k != 'resource'})
+                args = (args[0], new_auth_params) + args[2:]
+
+        logger.warning("PatchedAzureProvider: authorize called with args=%s, kwargs=%s", args, kwargs)
+        return super().authorize(*args, **kwargs)
+    
+auth_provider = PatchedAzureProvider()
 mcp = FastMCP(name="Jameson", auth=auth_provider)
 
 @mcp.tool
@@ -57,5 +71,4 @@ async def get_user_info() -> dict:
     }
 
 if __name__ == "__main__":
-    logger.info("FASTMCP_SERVER_AUTH: %s", os.environ.get("FASTMCP_SERVER_AUTH"))
     mcp.run(transport="http", port=4242)
