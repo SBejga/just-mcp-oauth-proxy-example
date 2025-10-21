@@ -27,6 +27,7 @@ Entra ID OAuth Proxy with FastMCP
         - User consent description: `Allows read access to just-mcp-oauth-proxy-example`
         - State: Enabled
         - "Add scope"
+        - note down the scope ("read")
 5. [X] "Configure Access Token Version": Ensure your app uses access token v2
     - Go to "Manifest" in the App registration sidebar.
     - **Attention**: This shows why so ever the old deprecated Azure AD Graph manifest by default!
@@ -50,7 +51,7 @@ Entra ID OAuth Proxy with FastMCP
 Set the required environment variables to use and configure the OAuth proxy with Entra ID.
 See `.env` - I inject client id, secret and tenant id from the app registration above using 1password CLI. (`./run.sh main.py`)
 
-Then I test with latest (currently: 0.17.1) MCP Inspector.
+Then I test with MCP Inspector. Check if newer version published.
 
 > With connection-type `via proxy`, as I understand fastmcp does not add CORS headers by default.
 
@@ -58,26 +59,24 @@ Then I test with latest (currently: 0.17.1) MCP Inspector.
 npx @modelcontextprotocol/inspector@0.17.1
 ```
 
-Click on "Connect" forwards me to Entra ID, but with the error:
-`AADSTS901002: The 'resource' request parameter is not supported.`
-
-Although I understood that FastMCP's AzureProvider should remove the resource parameter and not forward it to `/authorize`.
-
-> In this case, with mcp inspector, I can manually remove the parameter from the URL and then I get forwarded to the consent screen, see screenshot: ![entra-id-consent.png](entra-id-consent.png), Can click "Accept" and then get back to MCP Inspector.
-
-But this does not work with other clients.
-
-## Patched
-
-providing a workaround with PatchedAzureProvider
-according to https://github.com/jlowin/fastmcp/issues/1846
-
-it works now with MCP Inspector with `via proxy` connection type.
+> works with fastmcp 2.13.0rc2 and MCP Inspector 0.17.1
 
 ## Tested MCP Clients:
+
+with fastmcp 2.13.0rc2:
 
 - [X] MCP Inspector `via proxy` (with PatchedAzureProvider)
 - [ ] MCP Inspector `direct` (CORS issue TODO, see also https://github.com/jlowin/fastmcp/pull/2150)
 - [ ] Claude Desktop
 - [ ] Claude Web
 - [ ] ChatGPT Web
+
+## update fastmcp dependency
+
+change version in `pyproject.toml`
+
+```
+fastmcp==2.13.0rc2
+```
+
+then run: `uv sync`
