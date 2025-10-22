@@ -4,7 +4,7 @@ Entra ID OAuth Proxy with FastMCP
 
 ## Entra ID App registration
 
-> following https://github.com/jlowin/fastmcp/blob/v2.13.0rc1/docs/integrations/azure.mdx
+> following https://github.com/jlowin/fastmcp/blob/v2.13.0rc2/docs/integrations/azure.mdx
 
 1. [X] [Azure Portal](https://portal.azure.com/) "Microsoft Entra ID" > "App registrations"
 2. [X] "New registration"
@@ -44,10 +44,6 @@ Entra ID OAuth Proxy with FastMCP
 
 ## Run
 
-> Currently: I get an error from Entra ID when trying to authenticate.
-> FastMCP version: 2.12.5
-> MCP SDK version: 1.16.0
-
 Set the required environment variables to use and configure the OAuth proxy with Entra ID.
 See `.env` - I inject client id, secret and tenant id from the app registration above using 1password CLI. (`./run.sh main.py`)
 
@@ -61,15 +57,18 @@ npx @modelcontextprotocol/inspector@0.17.1
 
 > works with fastmcp 2.13.0rc2 and MCP Inspector 0.17.1
 
-## Tested MCP Clients:
+## Tested with:
 
-with fastmcp 2.13.0rc2:
+### fastmcp 2.13.0rc2
 
-- [X] MCP Inspector `via proxy` (with PatchedAzureProvider)
-- [ ] MCP Inspector `direct` (CORS issue TODO, see also https://github.com/jlowin/fastmcp/pull/2150)
+- [X] MCP Inspector 0.17.1 `via proxy` localhost
+- [ ] MCP Inspector 0.17.1 `direct` localhost (session-id not found?)
+- [ ] ChatGPT Web
+    - [X] Adding, list/tools
+    - [X] tool call => 401
 - [ ] Claude Desktop
 - [ ] Claude Web
-- [ ] ChatGPT Web
+
 
 ## update fastmcp dependency
 
