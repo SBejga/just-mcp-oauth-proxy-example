@@ -1,2 +1,3 @@
 #! /bin/bash
-op run --env-file ./.env -- ./.venv/bin/python $1
+ENV_FILE="${1:-./.env}"
+op run --env-file "$ENV_FILE" -- ./.venv/bin/python main.py
