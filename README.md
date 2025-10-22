@@ -61,11 +61,15 @@ npx @modelcontextprotocol/inspector@0.17.1
 
 ### fastmcp 2.13.0rc2
 
-- [X] MCP Inspector 0.17.1 `via proxy` localhost
-- [ ] MCP Inspector 0.17.1 `direct` localhost (session-id not found?)
+#### main-self.py
+
+- [X] MCP Inspector 0.17.1 - localhost `via proxy` (tools/list, tools/call, version, get_user_info)
+- [ ] MCP Inspector 0.17.1 - localhost `direct` (CORS issues)
+- [ ] MCP Inspector 0.17.1 - fastmcp.cloud `via proxy` (CORS issues, not handled by fastmcp-cloud for auth=public?)
+
 - [ ] ChatGPT Web
     - [X] Adding, list/tools
-    - [X] tool call => 401
+    - [ ] tool call => 401
 - [ ] Claude Desktop
 - [ ] Claude Web
 

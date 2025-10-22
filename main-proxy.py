@@ -5,7 +5,7 @@ from fastmcp.server.auth.providers.azure import AzureProvider
 from fastmcp.server.proxy import ProxyClient
 from fastmcp.utilities.logging import get_logger
 from starlette.middleware.cors import CORSMiddleware
-from base_tools import get_version_info, get_azure_user_info
+from base_tools import get_jameson_icon, get_relativator_icon, get_version_info, get_azure_user_info
 
 logger = get_logger(__name__)
     
@@ -19,15 +19,16 @@ else:
 
 mcp = FastMCP.as_proxy(
     ProxyClient(proxyMcpUrl),
-    name="Jameson",
-    auth=AzureProvider() # auth config via env
+    name="Relativator OAuth Proxy",
+    auth=AzureProvider(), # auth config via env
+    icons=[get_relativator_icon()]
 )
 
-@mcp.tool
+@mcp.tool(icons=[get_jameson_icon()])
 def version() -> str:
     return get_version_info()
 
-@mcp.tool
+@mcp.tool(icons=[get_jameson_icon()])
 async def get_user_info() -> dict:
     return await get_azure_user_info()
 

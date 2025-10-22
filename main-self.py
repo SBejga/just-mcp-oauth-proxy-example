@@ -1,8 +1,9 @@
 from fastmcp import FastMCP
 from fastmcp.server.auth.providers.azure import AzureProvider
-from base_tools import get_version_info, get_azure_user_info
+from base_tools import get_version_info, get_azure_user_info, get_jameson_icon
 
-mcp = FastMCP(name="Jameson", auth=AzureProvider()) # auth config via env
+ # auth config via env
+mcp = FastMCP(name="Jameson", auth=AzureProvider(), icons=[get_jameson_icon()])
 
 @mcp.tool
 def version() -> str:
