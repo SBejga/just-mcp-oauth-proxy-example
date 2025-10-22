@@ -1,12 +1,16 @@
+import toml
+import os
+import importlib.metadata
+from pathlib import Path
 from fastmcp import FastMCP
 from fastmcp.server.auth.providers.azure import AzureProvider
 from fastmcp.server.dependencies import get_access_token
 from fastmcp.server.proxy import ProxyClient
 from fastmcp.utilities.logging import get_logger
-import importlib.metadata
-from pathlib import Path
-import toml
-import os
+from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
+import uvicorn
+
 
 logger = get_logger(__name__)
     
@@ -50,5 +54,23 @@ async def get_user_info() -> dict:
         "office_location": token.claims.get("office_location") # type: ignore
     }
 
+middleware = [
+    Middleware(
+        CORSMiddleware,
+        allow_origins=[os.environ.get("CORS_ALLOW_ORIGINS", "*")],
+        allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
+        allow_headers=[
+            "mcp-protocol-version",
+            "mcp-session-id",
+            "Authorization",
+            "Content-Type",
+        ],
+        expose_headers=["mcp-session-id"],
+    )
+]
+
+mcp_app = mcp.http_app(middleware=middleware, path='/mcp')
+
 if __name__ == "__main__":
-    mcp.run(transport="http", host="0.0.0.0", port=4242)
+    uvicorn.run(mcp_app, host="0.0.0.0", port=4242)
+    # mcp.run(transport="http", host="0.0.0.0", port=4242)
