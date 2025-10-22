@@ -54,23 +54,17 @@ async def get_user_info() -> dict:
         "office_location": token.claims.get("office_location") # type: ignore
     }
 
-middleware = [
-    Middleware(
-        CORSMiddleware,
-        allow_origins=[os.environ.get("CORS_ALLOW_ORIGINS", "*")],
-        allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
-        allow_headers=[
-            "mcp-protocol-version",
-            "mcp-session-id",
-            "Authorization",
-            "Content-Type",
-        ],
-        expose_headers=["mcp-session-id"],
-    )
-]
-
-mcp_app = mcp.http_app(middleware=middleware, path='/mcp')
-
 if __name__ == "__main__":
-    uvicorn.run(mcp_app, host="0.0.0.0", port=4242)
+    CORS_ALLOW_ORIGINS = os.environ.get("CORS_ALLOW_ORIGINS", "*")
+    logger.info(f"CORS_ALLOW_ORIGINS: {CORS_ALLOW_ORIGINS}")
+    
+    starlette_app = mcp.streamable_http_app()
+    starlette_app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[CORS_ALLOW_ORIGINS],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+    uvicorn.run(starlette_app, host="0.0.0.0", port=4242)
     # mcp.run(transport="http", host="0.0.0.0", port=4242)
