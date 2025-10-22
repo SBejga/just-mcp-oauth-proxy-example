@@ -1,11 +1,26 @@
 from fastmcp import FastMCP
 from fastmcp.server.auth.providers.azure import AzureProvider
 from fastmcp.server.dependencies import get_access_token
+from fastmcp.server.proxy import ProxyClient
+from fastmcp.utilities.logging import get_logger
 import importlib.metadata
 from pathlib import Path
 import toml
+import os
 
-mcp = FastMCP(name="Jameson", auth=AzureProvider()) # auth config via env
+logger = get_logger(__name__)
+    
+proxyMcpUrl = os.environ.get("PROXY_MCP_URL", "")
+
+if not proxyMcpUrl:
+    logger.error("PROXY_MCP_URL not set; remote proxy not started.")
+    exit(1)
+
+mcp = FastMCP.as_proxy(
+    ProxyClient(proxyMcpUrl),
+    name="Jameson",
+    auth=AzureProvider() # auth config via env
+)
 
 @mcp.tool
 def version() -> str:
@@ -25,7 +40,6 @@ def version() -> str:
 @mcp.tool
 async def get_user_info() -> dict:
     """Returns information about the authenticated Azure user."""
-       
     token = get_access_token()
     # The AzureProvider stores user data in token claims
     return {
@@ -37,4 +51,4 @@ async def get_user_info() -> dict:
     }
 
 if __name__ == "__main__":
-    mcp.run(transport="http", port=4242)
+    mcp.run(transport="http", host="0.0.0.0", port=4242)
